@@ -12,8 +12,8 @@ test('objectifyArray', function (t) {
       name: 'sugar',
       taste: 'sugary',
       types: [
-        {customKeyName: 'fructose', commonName: 'fruit sugar'},
-        {customKeyName: 'glucose', commonName: 'grape sugar'}
+        {customKeyName: 'fructose', commonName: 'fruit sugar', name: 'Fruit Sugar', id: 1},
+        {customKeyName: 'glucose', commonName: 'grape sugar', name: 'Grape Sugar', id: 2}
       ]
     }, {
       name: 'water',
