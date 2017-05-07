@@ -6,7 +6,7 @@ module.exports = function objectifyArray (array, keyName) {
   var object = {}
 
   array.forEach(element => {
-    var identifier = element.name || element.id || element[keyName]
+    var identifier = element[keyName] || element.name || element.id
     if (!identifier) return
 
     if (element && typeof element === 'object') {
