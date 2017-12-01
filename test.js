@@ -1,8 +1,65 @@
 const test = require('tape')
 const objectifyArray = require('.')
 
-test('objectifyArray', function (t) {
-  var fruits = [{
+test('basic usage', function (t) {
+  var fruits = createFruits()
+  var result = objectifyArray(fruits, 'name')
+
+  t.equal(result.apple.color, 'red', 'keys by name')
+  t.equal('banana' in result, false, 'excludes objects with missing the key')
+  t.end()
+})
+
+test('by key option', function (t) {
+  var fruits = createFruits()
+  var result = objectifyArray(fruits, 'color')
+
+  t.equal(result.red.name, 'apple')
+  t.equal(result.yellow.id, 'banana')
+  t.equal(Array.isArray(result.yellow.ingredients), true, 'is not recursive by default')
+
+  t.deepEqual(
+    objectifyArray(fruits),
+    objectifyArray(fruits, 'id'),
+    'default should be by id'
+  )
+
+  t.deepEqual(
+    objectifyArray(fruits),
+    objectifyArray(fruits, ['id']),
+    'default should be by id'
+  )
+  t.end()
+})
+
+test('by array option', function (t) {
+  var users = [
+    { id: 'u', name: 'Alice' },
+    { name: 'Bob' }
+  ]
+
+  var result = objectifyArray(users, ['id', 'name'])
+  t.equal(result.u.name, 'Alice', 'supports objectifying by multiple keys')
+  t.equal(result.Bob.name, 'Bob', 'supports objectifying by multiple keys')
+  t.end()
+})
+
+test('recursive option', function (t) {
+  var fruits = createFruits()
+  var result = objectifyArray(fruits, ['customKeyName', 'id', 'name'], { recursive: true })
+
+  t.equal(result.apple.color, 'red')
+  t.equal(result.banana.color, 'yellow')
+  t.equal(result.banana.ingredients.sugar.taste, 'sugary', 'recursively adds named keys to child objects')
+  t.equal(result.banana.ingredients.sugar.types.glucose.commonName, 'grape sugar', 'allows a custom keyName to be specified')
+  t.end()
+})
+
+//
+// Helpers
+//
+function createFruits () {
+  return [{
     name: 'apple',
     color: 'red'
   }, {
@@ -20,12 +77,4 @@ test('objectifyArray', function (t) {
       taste: 'none'
     }]
   }]
-
-  t.comment('addKeys')
-  fruits = objectifyArray(fruits, 'customKeyName')
-  t.equal(fruits.apple.color, 'red', 'supports `name` as an object key')
-  t.equal(fruits.banana.color, 'yellow', 'supports `id` as an object key')
-  t.equal(fruits.banana.ingredients.sugar.taste, 'sugary', 'recursively adds named keys to child objects')
-  t.equal(fruits.banana.ingredients.sugar.types.glucose.commonName, 'grape sugar', 'allows a custom keyName to be specified')
-  t.end()
-})
+}

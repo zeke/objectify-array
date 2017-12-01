@@ -1,23 +1,39 @@
 'use strict'
 
-module.exports = function objectifyArray (array, keyName) {
+module.exports = function objectifyArray (array, keys, options) {
   if (!Array.isArray(array)) return array
 
-  var object = {}
+  if (!keys) {
+    keys = ['id']
+  } else if (typeof keys === 'string') {
+    keys = [keys]
+  }
 
-  array.forEach(element => {
-    var identifier = element[keyName] || element.name || element.id
+  var recursive = !!(options && options.recursive)
+
+  var result = {}
+
+  array.forEach(function (element) {
+    var identifier
+
+    for (var i = 0; i < keys.length; i++) {
+      if (element.hasOwnProperty(keys[i])) {
+        identifier = element[keys[i]]
+        break
+      }
+    }
+
     if (!identifier) return
 
-    if (element && typeof element === 'object') {
-      object[identifier] = {}
+    result[identifier] = element
+
+    if (recursive && typeof element === 'object') {
+      result[identifier] = {}
       Object.keys(element).forEach(function (e) {
-        object[identifier][e] = objectifyArray(element[e], keyName)
+        result[identifier][e] = objectifyArray(element[e], keys, options)
       })
-    } else {
-      object[identifier] = element
     }
   })
 
-  return object
+  return result
 }
