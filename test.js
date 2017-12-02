@@ -3,7 +3,7 @@ const objectifyArray = require('.')
 
 test('basic usage', function (t) {
   var fruits = createFruits()
-  var result = objectifyArray(fruits, 'name')
+  var result = objectifyArray(fruits, { by: 'name' })
 
   t.equal(result.apple.color, 'red', 'keys by name')
   t.equal('banana' in result, false, 'excludes objects with missing the key')
@@ -12,7 +12,7 @@ test('basic usage', function (t) {
 
 test('by key option', function (t) {
   var fruits = createFruits()
-  var result = objectifyArray(fruits, 'color')
+  var result = objectifyArray(fruits, { by: 'color' })
 
   t.equal(result.red.name, 'apple')
   t.equal(result.yellow.id, 'banana')
@@ -20,13 +20,13 @@ test('by key option', function (t) {
 
   t.deepEqual(
     objectifyArray(fruits),
-    objectifyArray(fruits, 'id'),
+    objectifyArray(fruits, { by: 'id' }),
     'default should be by id'
   )
 
   t.deepEqual(
     objectifyArray(fruits),
-    objectifyArray(fruits, ['id']),
+    objectifyArray(fruits, { by: ['id'] }),
     'default should be by id'
   )
   t.end()
@@ -38,7 +38,7 @@ test('by array option', function (t) {
     { name: 'Bob' }
   ]
 
-  var result = objectifyArray(users, ['id', 'name'])
+  var result = objectifyArray(users, { by: ['id', 'name'] })
   t.equal(result.u.name, 'Alice', 'supports objectifying by multiple keys')
   t.equal(result.Bob.name, 'Bob', 'supports objectifying by multiple keys')
   t.end()
@@ -46,7 +46,7 @@ test('by array option', function (t) {
 
 test('recursive option', function (t) {
   var fruits = createFruits()
-  var result = objectifyArray(fruits, ['customKeyName', 'id', 'name'], { recursive: true })
+  var result = objectifyArray(fruits, { by: ['customKeyName', 'id', 'name'], recursive: true })
 
   t.equal(result.apple.color, 'red')
   t.equal(result.banana.color, 'yellow')

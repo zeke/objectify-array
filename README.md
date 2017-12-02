@@ -42,7 +42,7 @@ This will return an object, using the `id` property values as keys:
 specify it as an optional second argument:
 
 ```js
-var peopleMap = objectifyArray(people, 'myCustomKeyName')
+var peopleMap = objectifyArray(people, { by: 'myCustomKeyName' })
 ```
 
 You can also specify multiple key names as an array, which are tried in the order you provide them.
@@ -65,7 +65,7 @@ var todos = [
     ]
   },
 ]
-var todosMap = objectifyArray(todos, ['id', 'name'], { recursive: true })
+var todosMap = objectifyArray(todos, { by: ['id', 'name'], recursive: true })
 
 todosMap[10] //=> { id: 10, description: ..., tags: ... }
 todosMap[20] //=> { id: 10, description: ..., tags: ... }
@@ -80,11 +80,12 @@ For more extensive usage examples, see [test.js](test.js)
 
 The module exports a single function:
 
-#### `objectifyArray(array[, keyNames[, options]])`
+#### `objectifyArray(array[, options])`
 
 * `array` Array - The array of objects to index.
-* `keyNames` String | Array (Optional) - They key(s) to index by.
-* `options` Object (optional) - `{ recursive: Boolean }`
+* `options` Object (optional) - `{ by: String | Array<String>, recursive: Boolean }`
+  - `by` (default: `['id']`) - The key (String) or keys (Array of Strings) to index by.
+  - `recursive` (default: `false`) - If true, will deeply objectify all arrays in your array of objects.
 
 ## Tests
 
