@@ -1,6 +1,6 @@
 {
   "name": "objectify-array",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Recursively convert arrays of objects into a single keyed object tree",
   "main": "index.js",
   "scripts": {
