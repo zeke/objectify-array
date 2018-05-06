@@ -44,6 +44,18 @@ test('by array option', function (t) {
   t.end()
 })
 
+test('by function option', function (t) {
+  var users = [
+    { id: 'u', name: 'Alice', hash: 22 }
+  ]
+
+  var identifier = (x) => `${x.id}_${x.hash}`
+
+  var result = objectifyArray(users, { by: identifier })
+  t.equal(result.u_22.name, 'Alice', 'supports objectifying by function')
+  t.end()
+})
+
 test('recursive option', function (t) {
   var fruits = createFruits()
   var result = objectifyArray(fruits, { by: ['customKeyName', 'id', 'name'], recursive: true })
