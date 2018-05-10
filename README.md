@@ -74,6 +74,18 @@ todosMap[10].tags.a.score //=> 15
 todosMap[10].tags.b.score //=> 83
 ```
 
+
+you can specify `options.by` to be a function, this function will receive the element and should return the key to be used for this element.
+
+ ```js
+ var users = [
+     { id: 'u', name: 'Alice', hash: 22 }
+   ]
+ var peopleMap = objectifyArray(people, { by: (x) => `${x.id}_${x.hash}` })
+ 
+ peopleMap.u_22.name //=> Alice
+ ```
+
 For more extensive usage examples, see [test.js](test.js)
 
 ## API

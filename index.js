@@ -4,7 +4,7 @@ module.exports = function objectifyArray (array, options) {
   if (!Array.isArray(array)) return array
 
   if (!options) {
-    options = { by: ['id'] }
+    options = {by: ['id']}
   }
 
   if (!options.by) {
@@ -13,19 +13,22 @@ module.exports = function objectifyArray (array, options) {
     options.by = [options.by]
   }
 
-  var keys = options.by
+  var by = options.by
   var recursive = !!(options && options.recursive)
 
   var result = {}
 
   array.forEach(function (element) {
     var identifier
-
-    for (var i = 0; i < keys.length; i++) {
-      if (element.hasOwnProperty(keys[i])) {
-        identifier = element[keys[i]]
-        break
+    if (Array.isArray(by)) {
+      for (var i = 0; i < by.length; i++) {
+        if (element.hasOwnProperty(by[i])) {
+          identifier = element[by[i]]
+          break
+        }
       }
+    } else {
+      identifier = by(element)
     }
 
     if (!identifier) return
